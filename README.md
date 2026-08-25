@@ -24,7 +24,7 @@ The service trains a small model at import time for zero-setup local execution; 
 
 ## Live demo
 
-The browser demo is deployed on Vercel at [09-fastapi-ml-service-demo](https://viyom-ml-prediction-service-j0k6lfplj-viyom1.vercel.app). The deployed page links back to the [GitHub source repository](https://github.com/Viyom-Tiwari/09-fastapi-ml-service).
+The browser demo is deployed on Vercel at [09-fastapi-ml-service-demo](https://viyom-public-ml-demo-m2kpvs94d-viyom1.vercel.app). The deployed page links back to the [GitHub source repository](https://github.com/Viyom-Tiwari/09-fastapi-ml-service).
 
 ## Data and APIs
 
