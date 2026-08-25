@@ -1,65 +1,32 @@
 # FastAPI ML Service
 
-An end-to-end ML application exposing a trained tabular classifier through FastAPI with typed request validation, health checks, and a small test suite.
-
-## Why this project
-
-This repository is an original, reproducible portfolio project designed to demonstrate practical engineering rather than notebook-only experimentation.
-
-## Stack
-
-Python, scikit-learn, FastAPI, Uvicorn
-
-## Architecture
-
-```mermaid
-flowchart LR
-    A[Input data] --> B[Validation and preprocessing]
-    B --> C[Model or retrieval layer]
-    C --> D[Evaluation]
-    D --> E[Prediction or API output]
-```
-
-The service trains a small model at import time for zero-setup local execution; production deployments should load a versioned artifact during startup instead. Pydantic validates input shape before inference.
+A runnable HTTP service around an iris classifier, with typed request validation, a health endpoint, a browser demo, and a Vercel-compatible `api/index.py` entrypoint.
 
 ## Live demo
 
-The browser demo is deployed on Vercel at [09-fastapi-ml-service-demo](https://viyom-public-ml-demo-m2kpvs94d-viyom1.vercel.app). The deployed page links back to the [GitHub source repository](https://github.com/Viyom-Tiwari/09-fastapi-ml-service).
+The browser demo is available at [Vercel deployment](https://viyom-public-ml-demo-m2kpvs94d-viyom1.vercel.app). Its UI links back to this [GitHub repository](https://github.com/Viyom-Tiwari/09-fastapi-ml-service).
 
-## Data and APIs
-
-Uses scikit-learn’s built-in iris dataset, so the service runs offline and requires no credentials.
-
-## Setup
+## Run locally
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+uvicorn src.api:app --reload
+pytest -q
 ```
 
-## Usage
+Then open `http://127.0.0.1:8000/docs` for the generated API documentation. A sample request is:
 
 ```bash
-uvicorn src.api:app --reload
+curl -X POST http://127.0.0.1:8000/predict \
+  -H 'content-type: application/json' \
+  -d '{"sepal_length":5.1,"sepal_width":3.5,"petal_length":1.4,"petal_width":0.2}'
 ```
 
-## Reproducibility notes
+## Architecture
 
-The implementation uses fixed random seeds where randomness is involved, keeps training and inference paths separate, and reports metrics rather than making unsupported performance claims.
+`src/api.py` serves the local app, while `api/index.py` is the serverless entrypoint used by Vercel. Both expose the same typed feature contract and reject non-positive measurements before inference.
 
-## Project structure
+## Data and limitations
 
-```text
-09-fastapi-ml-service/
-├── api/                 # Vercel-compatible FastAPI entrypoint
-├── src/                 # local implementation
-├── tests/               # lightweight verification
-├── README.md
-├── requirements.txt
-└── .gitignore
-```
-
-## Next improvements
-
-Add experiment tracking, richer data validation, and deployment monitoring as the project evolves.
+The model uses scikit-learn’s built-in iris dataset and is an educational example, not a botanical or scientific decision service. Production use would load a versioned artifact during startup, validate a formal feature schema, and add authentication and monitoring.
