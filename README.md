@@ -22,6 +22,10 @@ flowchart LR
 
 The service trains a small model at import time for zero-setup local execution; production deployments should load a versioned artifact during startup instead. Pydantic validates input shape before inference.
 
+## Live demo
+
+The browser demo is deployed on Vercel at [09-fastapi-ml-service-demo](https://09-fastapi-ml-service-demo-dxhg3yvqk-viyom1.vercel.app). The deployed page links back to the [GitHub source repository](https://github.com/Viyom-Tiwari/09-fastapi-ml-service).
+
 ## Data and APIs
 
 Uses scikit-learn’s built-in iris dataset, so the service runs offline and requires no credentials.
@@ -48,7 +52,8 @@ The implementation uses fixed random seeds where randomness is involved, keeps t
 
 ```text
 09-fastapi-ml-service/
-├── src/                 # implementation
+├── api/                 # Vercel-compatible FastAPI entrypoint
+├── src/                 # local implementation
 ├── tests/               # lightweight verification
 ├── README.md
 ├── requirements.txt
