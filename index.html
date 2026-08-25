@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ML Prediction Service</title>
+  <style>
+    :root { color-scheme: dark; font-family: Inter, system-ui, sans-serif; }
+    body { margin: 0; min-height: 100vh; background: #0b1020; color: #e8eefc; display: grid; place-items: center; }
+    main { width: min(720px, calc(100% - 32px)); padding: 42px; border: 1px solid #263454; border-radius: 24px; background: linear-gradient(145deg,#111a32,#0f172a); box-shadow: 0 24px 80px #0008; }
+    h1 { margin: 0 0 10px; font-size: clamp(2rem,5vw,3.5rem); letter-spacing: -.05em; }
+    p { color: #aab8d6; line-height: 1.6; }
+    .grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin: 26px 0; }
+    label { display: grid; gap: 7px; color: #b9c6e4; font-size: .9rem; }
+    input { padding: 13px; border-radius: 10px; border: 1px solid #334363; background: #0a1123; color: white; font-size: 1rem; }
+    button { border: 0; border-radius: 10px; padding: 14px 18px; background: #7c5cff; color: white; font-weight: 700; cursor: pointer; }
+    button:hover { background: #9278ff; }
+    #result { margin-top: 20px; min-height: 28px; color: #9de3b0; }
+    a { color: #a99aff; }
+  </style>
+</head>
+<body>
+  <main>
+    <p>Viyom Tiwari · FastAPI + scikit-learn</p>
+    <h1>ML Prediction Service</h1>
+    <p>Enter four iris measurements to call the deployed typed prediction endpoint.</p>
+    <div class="grid">
+      <label>Sepal length<input id="a" type="number" step="0.1" value="5.1"></label>
+      <label>Sepal width<input id="b" type="number" step="0.1" value="3.5"></label>
+      <label>Petal length<input id="c" type="number" step="0.1" value="1.4"></label>
+      <label>Petal width<input id="d" type="number" step="0.1" value="0.2"></label>
+    </div>
+    <button onclick="predict()">Run prediction</button>
+    <div id="result" role="status"></div>
+    <p><a href="https://github.com/Viyom-Tiwari/09-fastapi-ml-service">View source on GitHub →</a></p>
+  </main>
+  <script>
+    async function predict() {
+      const result = document.getElementById('result');
+      result.textContent = 'Running inference…';
+      const features = ['a','b','c','d'].map(id => Number(document.getElementById(id).value));
+      try {
+        const response = await fetch('/api/predict', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({sepal_length:features[0], sepal_width:features[1], petal_length:features[2], petal_width:features[3]}) });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.detail || 'Prediction failed');
+        result.textContent = `${data.class_name} · confidence ${(data.confidence * 100).toFixed(1)}%`;
+      } catch (error) { result.textContent = error.message; }
+    }
+  </script>
+</body>
+</html>
